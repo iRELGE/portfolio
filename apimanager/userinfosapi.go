@@ -77,6 +77,7 @@ func Updateuserprofile(c echo.Context) error {
 	LastName := c.FormValue("LastName")
 	Phone := c.FormValue("Phone")
 	file, err := c.FormFile("Photo")
+	defer c.Request().Body.Close()
 	if err != nil {
 		return c.String(http.StatusBadRequest, "please resend an other photo")
 	}

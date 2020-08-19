@@ -15,6 +15,9 @@ import (
 func Createproject(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*createjwt.JwtCustomClaims)
+	if claims.RolesID != 1 {
+		return c.JSON(http.StatusUnauthorized, "you are not authaurise to create project")
+	}
 
 	defer c.Request().Body.Close()
 	Title := c.FormValue("Title")
@@ -22,11 +25,11 @@ func Createproject(c echo.Context) error {
 	Link := c.FormValue("Link")
 	file, err := c.FormFile("Photo")
 	if err != nil {
-		return c.String(http.StatusBadRequest, "please resend an other photo")
+		return c.String(http.StatusBadRequest, "please try again and please resend an other photo")
 	}
 	fileName, err := img.Uploadimg(file, "projects")
 	if err != nil {
-		return c.String(http.StatusBadRequest, "please resend an other photo")
+		return c.String(http.StatusBadRequest, "please try again and resend an other photo")
 	}
 	newproject := new(models.Project)
 	newproject.Title = Title
