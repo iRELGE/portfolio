@@ -1,0 +1,11 @@
+diff a/go.mod b/go.mod	(rejected hunks)
+@@ -0,0 +1,9 @@
++module rabie.com/portfolio
++
++go 1.14
++
++require (
++	github.com/go-sql-driver/mysql v1.5.0
++	github.com/lib/pq v1.3.0
++	github.com/thanos-io/thanos v0.14.0
++)
