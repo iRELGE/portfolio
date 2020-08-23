@@ -4,15 +4,15 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"rabie.com/portfolio/models"
 )
 
 // Createjwttoken it return token string and err
-func Createjwttoken(u models.User) (string, error) {
+func Createjwttoken(u JwtCustomClaims) (string, error) {
 
 	claims := &JwtCustomClaims{
 		u.ID,
 		u.Email,
+		u.RolesID,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 		},

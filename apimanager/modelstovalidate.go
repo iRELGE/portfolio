@@ -8,6 +8,7 @@ type (
 		Email    string `json:"Email" validate:"required,email"`
 		Password string `json:"assword" validate:"required"`
 	}
+	// CustomValidator validator
 	CustomValidator struct {
 		validator *validator.Validate
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
+	"rabie.com/portfolio/createjwt"
 	"rabie.com/portfolio/errorrepo"
 	"rabie.com/portfolio/hash"
 	"rabie.com/portfolio/models"
@@ -45,17 +46,26 @@ func RegisterUserdb(u models.User) (bool, models.Userprofile) {
 }
 
 // LoginExist return a boolean value true if exist and false if not
-func LoginExist(Email, Password string) (bool, models.User) {
+func LoginExist(Email, Password string) (bool, createjwt.JwtCustomClaims) {
 	db, err := Connectdb()
 	errorrepo.DieIf(err)
+	// retriev all user info from db
 	logged, err := models.Users(qm.Where(models.UserColumns.Email+"= ?", Email)).One(context.Background(), db)
 	errorrepo.DieIf(err)
+	//hash password for db
 	Password = hash.Hashpassword(Password)
+	claim := new(createjwt.JwtCustomClaims)
+	//retriev user role
+	role, err := logged.UserRoles().One(context.Background(), db)
+	//alluser clailm
+	errorrepo.DieIf(err)
+	claim.Email = logged.Email
+	claim.ID = logged.ID
+	claim.RolesID = role.RolesID
 	if logged.Password == Password && logged.Status == true {
-		return true, *logged
+		return true, *claim
 	}
-
-	return false, *logged
+	return false, *claim
 
 }
 
